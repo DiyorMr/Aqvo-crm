@@ -1,4 +1,9 @@
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import {
+  LoginOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { Button, Layout, theme } from "antd";
 
 const { Header } = Layout;
@@ -23,8 +28,15 @@ const Headers = ({ setCollapsed, collapsed }) => {
         onClick={() => setCollapsed(!collapsed)}
         className="font-base size-16 pt-4"
       />
-      <div>
-        <p>profile</p>
+      <div className="flex items-center gap-4">
+        <UserOutlined className="cursor-pointer bg-[#00000040] size-8 p-2 text-white rounded-2xl" />
+        <p className="font-normal text-base text-black">Profile</p>
+        <div className="flex gap-2 border-1 border-gray-400 cursor-pointer px-2 py-1 rounded-sm  hover:text-blue-400 hover:border-blue-400">
+          <LoginOutlined />
+          <p className="font-normal text-base text-black  hover:text-blue-400">
+            Chiqish
+          </p>
+        </div>
       </div>
     </Header>
   );

@@ -1,29 +1,35 @@
-import { UploadOutlined, UserOutlined, VideoCameraOutlined } from "@ant-design/icons";
+import {
+  AppstoreAddOutlined,
+  DesktopOutlined,
+  MergeCellsOutlined,
+  ShopOutlined,
+  UsergroupAddOutlined,
+} from "@ant-design/icons";
 
 export const sidebarData = [
   {
     key: "/",
-    icon: <UserOutlined />,
-    label: "nav 1",
+    icon: <DesktopOutlined />,
+    label: "Statistics",
   },
   {
     key: "/warehouse",
-    icon: <VideoCameraOutlined />,
-    label: "nav 2",
+    icon: <MergeCellsOutlined />,
+    label: "Warehouse",
   },
   {
     key: "/stores",
-    icon: <UploadOutlined />,
-    label: "nav 3",
+    icon: <ShopOutlined />,
+    label: "Stores",
   },
   {
     key: "/employees",
-    icon: <UploadOutlined />,
-    label: "nav 4",
+    icon: <UsergroupAddOutlined />,
+    label: "Employees",
   },
   {
     key: "/finished-products",
-    icon: <UploadOutlined />,
-    label: "nav 5",
+    icon: <AppstoreAddOutlined />,
+    label: "FinishedProducts",
   },
 ];
