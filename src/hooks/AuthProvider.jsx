@@ -5,34 +5,31 @@ const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("accToken") || "");
+  const [loading, setLoading] = useState(false);
+  const [token, setToken] = useState(localStorage.getItem("accToken"));
   const navigate = useNavigate();
 
   const loginAction = async (data) => {
+    setLoading(true);
     try {
-      const response = await fetch(
-        "https://realauto.limsa.uz/api/auth/signin",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch("https://aqvo.limsa.uz/api/auth/sign-in", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
       const res = await response.json();
-      if (res.success) {
-        setUser(res.data.user);
-        setToken(res.data.tokens.accessToken.token);
-        localStorage.setItem("accToken", res.data.tokens.accessToken.token);
-        localStorage.setItem(
-          "accTokenExpired",
-          res.data.tokens.accessToken.expiresAt
-        );
-        navigate("/categories");
+      if (res.statusCode === 200) {
+        setUser(res.data.data);
+        setToken(res.data.tokens.access_token);
+        localStorage.setItem("accToken", res.data.tokens.access_token);
+        navigate("/statistics");
         return;
       }
       throw new Error(res.message);
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -40,12 +37,11 @@ const AuthProvider = ({ children }) => {
     setUser(null);
     setToken("");
     localStorage.removeItem("accToken");
-    localStorage.removeItem("accTokenExpired");
     navigate("/login");
   };
 
   return (
-    <AuthContext.Provider value={{ token, user, loginAction, logOut }}>
+    <AuthContext.Provider value={{ token, user, loading, loginAction, logOut }}>
       {children}
     </AuthContext.Provider>
   );

@@ -8,7 +8,7 @@ import {
 
 export const sidebarData = [
   {
-    key: "/",
+    key: "/statistics",
     icon: <DesktopOutlined />,
     label: "Statistika",
   },

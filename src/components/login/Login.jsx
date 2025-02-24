@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/AuthProvider";
 
 const Login = () => {
@@ -9,7 +8,7 @@ const Login = () => {
     e.preventDefault();
 
     var data = {
-      phone_number: e.target.phone.value,
+      phoneNumber: e.target.phone.value,
       password: e.target.password.value,
     };
 
@@ -65,9 +64,13 @@ const Login = () => {
                   required=""
                 />
               </div>
-              <div className="w-full cursor-pointer bg-blue-500 text-center text-white p-3 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <Link to="/">Kirish</Link>
-              </div>
+              <button
+                className="w-full cursor-pointer bg-blue-500 text-center text-white p-3 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-blue-800"
+                type="submit"
+                disabled={auth.loading}
+              >
+                {auth.loading ? "Kutib turing..." : "Kirish"}
+              </button>
             </form>
           </div>
         </div>

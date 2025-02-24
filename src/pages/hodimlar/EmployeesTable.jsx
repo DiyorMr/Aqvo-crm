@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { Button, Form, Input, Popconfirm, Table } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { EditOutlined } from "@ant-design/icons/lib/icons";
+import EmployeesAddModal from "./EmployeesAddModal";
+import { NavLink } from "react-router-dom";
 const EditableContext = React.createContext(null);
 const EditableRow = ({ index, ...props }) => {
   const [form] = Form.useForm();
@@ -13,6 +15,7 @@ const EditableRow = ({ index, ...props }) => {
     </Form>
   );
 };
+
 const EditableCell = ({
   title,
   editable,
@@ -177,11 +180,9 @@ const EmployeesTable = () => {
         <h1 className="font-semibold text-black text-xl">Employees</h1>
         <div className="flex gap-6">
           <Button className="mb-5" type="primary">
-            Davomatga o'tish
+            <NavLink to="attendance">Davomatga o'tish</NavLink>
           </Button>
-          <Button className="mb-5" onClick={handleAdd} type="primary">
-            Yangi xodim qo'shish
-          </Button>
+          <EmployeesAddModal />
         </div>
       </div>
       <Table

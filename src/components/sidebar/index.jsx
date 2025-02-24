@@ -1,10 +1,13 @@
 import { Layout, Menu } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { sidebarData } from "../../data/sidebar-data";
 const { Sider } = Layout;
 
-const Sidebar = ({collapsed}) => {
-    const navigate = useNavigate();
+const Sidebar = ({ collapsed }) => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const selectedKey =
+    pathname === "/employees/attendance" ? "/employees" : pathname;
   return (
     <Sider trigger={null} collapsible collapsed={collapsed}>
       <div className="demo-logo-vertical p-4 flex justify-center">
@@ -18,6 +21,7 @@ const Sidebar = ({collapsed}) => {
         theme="dark"
         mode="inline"
         defaultSelectedKeys={["/"]}
+        selectedKeys={selectedKey}
         onClick={(item) => navigate(item.key)}
         items={sidebarData}
       />
