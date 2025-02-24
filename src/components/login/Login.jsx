@@ -11,7 +11,6 @@ const Login = () => {
       phoneNumber: e.target.phone.value,
       password: e.target.password.value,
     };
-
     auth.loginAction(data);
   };
   return (
