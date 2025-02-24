@@ -1,4 +1,4 @@
-export { default as Statistika } from "./statistika";
+export { default as Statistika } from "./Statistika";
 export { default as Hodimlar } from "./hodimlar";
 export { default as Error } from "./error";
 export { default as TayyorMaxsulotlar } from "./tayyormaxsulotlar";
