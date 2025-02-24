@@ -1,38 +1,55 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
-import { Employees, Error, FinishedProducts, Statistics, Stores, Warehouse } from "../pages";
+import Login from "../components/login/Login";
+import {
+  Attendance,
+  Error,
+  Hodimlar,
+  Statistika,
+  TayyorMaxsulotlar,
+} from "../pages";
+import Magazinlar from "../pages/magazin";
+import Ombor from "../pages/ombor";
 
 const routes = createBrowserRouter([
-    {
-      path: "/",
-      element: <App />,
-      children: [
-        {
-          path: "/",
-          element: <Statistics />,
-        },
-        {
-          path: "warehouse",
-          element: <Warehouse />,
-        },
-        {
-          path: "stores",
-          element: <Stores />,
-        },
-        {
-          path: "employees",
-          element: <Employees />,
-        },
-        {
-          path: "finished-products",
-          element: <FinishedProducts />,
-        },       
-        {
-          path: "*",
-          element: <Error />,
-        },
-      ],
-    },
-  ]);
-  
-  export default routes;
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      {
+        path: "/",
+        element: <Statistika />,
+      },
+      {
+        path: "categories",
+        element: <Ombor />,
+      },
+      {
+        path: "shops",
+        element: <Magazinlar />,
+      },
+      {
+        path: "employees",
+        element: <Hodimlar />,
+      },
+      {
+        path: "employees/attendance",
+        element: <Attendance />,
+      },
+      {
+        path: "ready-product",
+        element: <TayyorMaxsulotlar />,
+      },
+      {
+        path: "*",
+        element: <Error />,
+      },
+    ],
+  },
+]);
+
+export default routes;

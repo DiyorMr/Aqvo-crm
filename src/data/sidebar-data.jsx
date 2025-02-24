@@ -10,26 +10,26 @@ export const sidebarData = [
   {
     key: "/",
     icon: <DesktopOutlined />,
-    label: "Statistics",
+    label: "Statistika",
   },
   {
-    key: "/warehouse",
+    key: "/categories",
     icon: <MergeCellsOutlined />,
-    label: "Warehouse",
+    label: "Ombor",
   },
   {
-    key: "/stores",
+    key: "/shops",
     icon: <ShopOutlined />,
-    label: "Stores",
+    label: "Magazinlar",
   },
   {
     key: "/employees",
     icon: <UsergroupAddOutlined />,
-    label: "Employees",
+    label: "Hodimlar",
   },
   {
-    key: "/finished-products",
+    key: "/ready-product",
     icon: <AppstoreAddOutlined />,
-    label: "FinishedProducts",
+    label: "Tayyor maxsulotlar",
   },
 ];
