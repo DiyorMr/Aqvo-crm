@@ -1,9 +1,9 @@
 import React from 'react'
 
-const Magazinlar = () => {
+const Magazin = () => {
   return (
     <div>Magazinlar</div>
   )
 }
 
-export default Magazinlar
+export default Magazin
