@@ -21,7 +21,7 @@ const Login = () => {
             <div className="flex items-center justify-center">
               <img
                 className="w-32 h-11"
-                src="../../../public/logo.png"
+                src="/logo.png"
                 alt=""
               />
             </div>
