@@ -2,7 +2,7 @@ import React from 'react'
 
 const Magazin = () => {
   return (
-    <div>Magazinlar</div>
+    <div>Magazinlar  Asilbek boshladi</div>
   )
 }
 
