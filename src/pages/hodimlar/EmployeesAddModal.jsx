@@ -1,35 +1,71 @@
 import { CalendarOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Form, Input, Modal } from "antd";
+import { Button, DatePicker, Form, Input, InputNumber, Modal } from "antd";
+import axios from "axios";
+import dayjs from "dayjs";
 import React from "react";
+import { toast } from "react-toastify";
+import { defaultModalData } from "./constants";
 
-const EmployeesAddModal = () => {
-  const [open, setOpen] = React.useState(false);
-  const [loading, setLoading] = React.useState(true);
+const EmployeesAddModal = ({
+  modalData,
+  setModalData,
+  open,
+  setOpen,
+  loading,
+  getList
+}) => {
+  const token = localStorage.getItem("accToken");
+  const headers = { headers: { Authorization: `Bearer ${token}` } };
+
   const onFinish = (values) => {
-    console.log("Form values:", values);
-    setOpen(false);
-  };
-  const showLoading = () => {
-    setOpen(true);
-    setLoading(true);
+    var values = modalData.id
+      ? {
+          ...values,
+          startedWorkingAt: dayjs(values.startedWorkingAt).format("YYYY-MM-DD"),
+        }
+      : values;
 
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    modalData.id
+      ? axios
+          .put(`https://aqvo.limsa.uz/api/users/${modalData.id}`, values, headers)
+          .then((res) => res.data.statusCode===200&&toast.success("Muvaffaqiyatli o'zgartirildi!"))
+          .catch((err) => toast.error(err.response.data.message))
+          .finally(()=>getList())
+      :  axios
+          .post(`https://aqvo.limsa.uz/api/auth/employee/sign-up`, values, headers)
+          .then((res) => res.data.statusCode===200&&toast.success("Muvaffaqiyatli yaratildi!"))
+          .catch((err) => toast.error(err.response.data.message))
+          .finally(()=>getList())
+    setOpen(false);
+    setModalData(defaultModalData);
   };
+
+  const closeModal = () => {
+    setModalData(defaultModalData);
+    setTimeout(() => {
+      setOpen(false);
+    }, 200);
+  };
+
   return (
     <div>
-      <Button type="primary" onClick={showLoading}>
-        Yangi hodim qo'shish
-      </Button>
       <Modal
         title={<h1>Hodim qo'shish</h1>}
         footer={false}
         loading={loading}
         open={open}
-        onCancel={() => setOpen(false)}
+        onCancel={() => closeModal()}
+        centered
       >
-        <Form layout="vertical" onFinish={onFinish}>
+        <Form
+          layout="vertical"
+          onFinish={onFinish}
+          initialValues={{
+            ...modalData,
+            salary:parseInt(modalData.salary),
+            startedWorkingAt: dayjs(modalData.startedWorkingAt, "YYYY-MM-DD"),
+          }}
+        >
           <Form.Item
             label="Ism"
             name="firstName"
@@ -46,39 +82,39 @@ const EmployeesAddModal = () => {
           </Form.Item>
           <Form.Item
             label="Telefon raqami"
-            name="phone"
+            name="phoneNumber"
             rules={[{ required: true, message: "Telefon raqamini kiriting" }]}
           >
             <Input placeholder="99 999 99 99" />
           </Form.Item>
           <Form.Item
             label="Lavozim"
-            name="text"
+            name="position"
             rules={[{ required: true, message: "Lavozimini kiriting!" }]}
           >
             <Input placeholder="Lavozimini kiriting" />
           </Form.Item>
           <Form.Item
             label="Oylik"
-            name="oylik"
+            name="salary"
             rules={[{ required: true, message: "Oylikni kiriting!" }]}
           >
-            <Input placeholder="Oylikni kiriting" />
+            <InputNumber style={{width:"100%"}} placeholder="Oylikni kiriting" />
           </Form.Item>
           <Form.Item
             label="Ish boshlanish sanasi"
-            name="startDate"
+            name="startedWorkingAt"
             rules={[{ required: true, message: "Sanani tanlang!" }]}
           >
             <DatePicker
               className="w-full"
-              format="DD.MM.YYYY"
+              format="YYYY-MM-DD"
               placeholder="ДД.ММ.ГГГГ"
               suffixIcon={<CalendarOutlined />}
             />
           </Form.Item>
           <Button type="primary" htmlType="submit" className="w-full">
-            Qo'shish
+            {modalData.id ? "O'zgartirish" : "Qo'shish"}
           </Button>
         </Form>
       </Modal>

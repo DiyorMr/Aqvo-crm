@@ -135,17 +135,12 @@ const dataSource = [
     age: 32,
     address: "New York Park",
   },
-  {
-    key: "2",
-    name: "Ethan",
-    age: 40,
-    address: "London Park",
-  },
 ];
 const AttendanceTable = () => {
   const { styles } = useStyle();
   return (
     <Table
+    
       bordered
       className={styles.customTable}
       columns={columns}

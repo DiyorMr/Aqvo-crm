@@ -1,9 +1,12 @@
 import React from 'react'
+import MagazineTable from './MagazineTable';
 
-const Magazinlar = () => {
+const Magazin = () => {
   return (
-    <div>Magazinlar</div>
+    <div>
+      <MagazineTable/>
+    </div>
   )
 }
 
-export default Magazinlar
+export default Magazin

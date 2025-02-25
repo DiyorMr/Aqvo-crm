@@ -3,7 +3,7 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
 } from "@ant-design/icons";
-import { Button, Layout, theme } from "antd";
+import { Button, Layout } from "antd";
 import { useAuth } from "../../hooks/AuthProvider";
 import ProfilModal from "./ProfilModal";
 
