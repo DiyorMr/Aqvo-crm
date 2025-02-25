@@ -6,6 +6,7 @@ import EmployeesAddModal from "./EmployeesAddModal";
 import { NavLink } from "react-router-dom";
 import { columns, defaultModalData } from "./constants";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const EmployeesTable = () => {
   const token = localStorage.getItem("accToken");
