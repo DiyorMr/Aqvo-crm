@@ -1,8 +1,11 @@
 import React from 'react'
+import MagazineTable from './MagazineTable';
 
 const Magazin = () => {
   return (
-    <div>Magazinlar</div>
+    <div>
+      <MagazineTable/>
+    </div>
   )
 }
 
