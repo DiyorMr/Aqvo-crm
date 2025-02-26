@@ -1,20 +1,21 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Modal, Select, Space, Table, Typography } from 'antd';
 import 'antd/dist/reset.css';
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import httpRequest from '../../axios';
 
 const { Title } = Typography;
 const { Option } = Select;
-axios.defaults.baseURL = 'https://aqvo.limsa.uz/api/';
+
 const Ombor = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
   const [editingId, setEditingId] = useState(null);
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     fetchCategories();
@@ -23,13 +24,11 @@ const Ombor = () => {
   const fetchCategories = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('/categories');
-      // Ensure we always have an array, even if API returns null/undefined
-      setData(Array.isArray(response.data) ? response.data : []);
+      const response = await httpRequest.get('/categories');
+      console.log(response.data.data);
+      setData(response.data.data);
     } catch (error) {
-      toast.error('Error fetching data');
-      console.error('Failed to fetch categories:', error);
-      // Set empty array in case of error
+      console.log(error);
       setData([]);
     } finally {
       setLoading(false);
@@ -45,8 +44,8 @@ const Ombor = () => {
   const showEditModal = (record) => {
     setEditingId(record.id);
     form.setFieldsValue({
-      category: record.nomi,
-      unit: record.olchov_turi,
+      category: record.category,
+      unit: record.unit,
       amount: record.miqdori
     });
     setIsModalVisible(true);
@@ -59,63 +58,107 @@ const Ombor = () => {
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
+      const payload = {
+        category: values.category,
+        unit: values.unit
+      };
       
       if (editingId) {
-        // Handle edit logic
-        await axios.put(`/categories/${editingId}`, {
-          category: values.category,
-          unit: values.unit
-        });
+        await httpRequest.patch(`/categories/${editingId}`, payload);
         toast.success('Category updated successfully');
       } else {
-        // Handle add logic
-        await axios.post('/categories', {
-          category: values.category,
-          unit: values.unit
-        });
+        await httpRequest.post('/categories', payload);
         toast.success('Category added successfully');
       }
       
       setIsModalVisible(false);
       fetchCategories();
     } catch (error) {
-      toast.error('Error saving data');
       console.error('Submit failed:', error);
     }
   };
 
+  // Modified delete function with additional logging and error handling
   const handleDelete = async (id) => {
-    try {
-      await axios.delete(`/categories/${id}`);
-      toast.success('Category deleted successfully');
-      fetchCategories();
-    } catch (error) {
-      toast.error('Error deleting data');
-      console.error('Delete failed:', error);
-    }
+    console.log('Delete requested for ID:', id);
+    
+    Modal.confirm({
+      title: 'Are you sure you want to delete this category?',
+      content: 'This action cannot be undone',
+      okText: 'Yes, delete it',
+      okType: 'danger',
+      cancelText: 'Cancel',
+      onOk: async () => {
+        setLoading(true);
+        try {
+          console.log('Making DELETE request to:', `/categories/${id}`);
+          const response = await httpRequest.delete(`/categories/${id}`);
+          console.log('Delete response:', response);
+          
+          toast.success('Category deleted successfully');
+          // Immediate local update for better UX
+          setData(prevData => prevData.filter(item => item.id !== id));
+          // Then refresh from server
+          await fetchCategories();
+        } catch (error) {
+          console.error('Delete failed:', error);
+          toast.error(`Failed to delete category: ${error.message || 'Unknown error'}`);
+        } finally {
+          setLoading(false);
+        }
+      }
+    });
   };
+
+  const handleSearch = (value) => {
+    setSearchText(value);
+  };
+
+  // Filter the data based on search text
+  const filteredData = data.filter(item => 
+    item.category?.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   const columns = [
     {
       title: 'No',
       dataIndex: 'id',
       key: 'id',
-      width: 80
+      width: 80,
+      render: (_, __, index) => index + 1
     },
     {
       title: 'Nomi',
-      dataIndex: 'nomi',
-      key: 'nomi',
+      dataIndex: 'category',
+      key: 'category',
+      sorter: (a, b) => a.category.localeCompare(b.category)
     },
     {
       title: 'Miqdori',
       dataIndex: 'miqdori',
       key: 'miqdori',
+      render: (_, record) => {
+        if (record.products && record.products.length > 0) {
+          return record.products.reduce((sum, product) => sum + (product.quantity || 0), 0);
+        }
+        return 0;
+      },
+      sorter: (a, b) => {
+        const aTotal = a.products ? a.products.reduce((sum, product) => sum + (product.quantity || 0), 0) : 0;
+        const bTotal = b.products ? b.products.reduce((sum, product) => sum + (product.quantity || 0), 0) : 0;
+        return aTotal - bTotal;
+      }
     },
     {
       title: "O'lchov turi",
-      dataIndex: 'olchov_turi',
-      key: 'olchov_turi',
+      dataIndex: 'unit',
+      key: 'unit',
+      filters: [
+        { text: 'KG', value: 'KG' },
+        { text: 'DONA', value: 'DONA' },
+        { text: 'PACHKA', value: 'PACHKA' },
+      ],
+      onFilter: (value, record) => record.unit === value
     },
     {
       title: 'Amallar',
@@ -129,8 +172,10 @@ const Ombor = () => {
           />
           <Button 
             type="text" 
-            icon={<DeleteOutlined style={{ color: 'red' }} />} 
+            danger
+            icon={<DeleteOutlined />} 
             onClick={() => handleDelete(record.id)}
+            title="Delete category"
           />
         </Space>
       ),
@@ -148,7 +193,9 @@ const Ombor = () => {
           <Input.Search
             placeholder="Kategoriya qidirish"
             style={{ width: 250 }}
-            onSearch={(value) => console.log(value)}
+            onSearch={handleSearch}
+            onChange={(e) => handleSearch(e.target.value)}
+            allowClear
           />
           <Button 
             type="primary" 
@@ -162,10 +209,14 @@ const Ombor = () => {
       
       <Table
         columns={columns}
-        dataSource={data || []} // Ensure we always have an array
-        rowKey={(record) => record.id || Math.random()} // Ensure we always have a unique key
+        dataSource={filteredData}
+        rowKey={(record) => record.id || Math.random()}
         loading={loading}
-        pagination={{ pageSize: 10 }}
+        pagination={{ 
+          pageSize: 10,
+          showSizeChanger: true,
+          pageSizeOptions: ['10', '20', '50']
+        }}
         bordered
       />
       
