@@ -1,5 +1,6 @@
 import LayoutWrapper from "../layout";
 import { Attendance, Hodimlar, Magazin, Ombor, Statistika, TayyorMaxsulotlar } from "../pages";
+import Tayyor1 from "../pages/tayyormaxsulotlar/Tayyor1";
 
 export const childrenRoutes = [
   {
@@ -47,6 +48,14 @@ export const childrenRoutes = [
     element: (
       <LayoutWrapper>
         <TayyorMaxsulotlar />
+      </LayoutWrapper>
+    ),
+  },
+  {
+    path: "tayyor1/:id",
+    element: (
+      <LayoutWrapper>
+        <Tayyor1 />
       </LayoutWrapper>
     ),
   },
