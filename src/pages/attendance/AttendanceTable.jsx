@@ -1,6 +1,6 @@
 import React from "react";
 import { Table } from "antd";
-import { createStyles } from "antd-style";
+import { createStyles } from "antd-style"
 const useStyle = createStyles(({ css, token }) => {
   const { antCls } = token;
   return {
