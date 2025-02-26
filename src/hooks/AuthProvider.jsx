@@ -23,7 +23,7 @@ const AuthProvider = ({ children }) => {
         setUser(res.data.data);
         setToken(res.data.tokens.access_token);
         localStorage.setItem("accToken", res.data.tokens.access_token);
-        toast.success('Tizimga muvaffaqiyatli kirildi!')
+        toast.success("Tizimga muvaffaqiyatli kirildi!");
         navigate("/statistics");
         return;
       }
@@ -40,7 +40,7 @@ const AuthProvider = ({ children }) => {
     setToken("");
     localStorage.removeItem("accToken");
     navigate("/login");
-    toast.success('Tizimdan chiqildi!')
+    toast.success("Tizimdan chiqildi!");
   };
 
   return (

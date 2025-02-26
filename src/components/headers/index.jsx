@@ -2,10 +2,10 @@ import {
   LoginOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
-import { Button, Layout, theme } from "antd";
+import { Button, Layout } from "antd";
 import { useAuth } from "../../hooks/AuthProvider";
-import ProfilModal from "./ProfilModal";
 
 const { Header } = Layout;
 
@@ -29,7 +29,7 @@ const Headers = ({ setCollapsed, collapsed }) => {
         className="font-base size-16 pt-4"
       />
       <div className="flex items-center gap-4">
-        <ProfilModal />
+        <UserOutlined className="cursor-pointer bg-black/20 rounded-full p-3" />
         <button
           type="button"
           className="flex gap-2 border-1 border-gray-400 cursor-pointer px-2 py-1 rounded-sm  hover:text-blue-400 hover:border-blue-400"
