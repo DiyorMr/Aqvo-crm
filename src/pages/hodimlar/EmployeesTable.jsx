@@ -7,6 +7,7 @@ import { NavLink } from "react-router-dom";
 import { columns, defaultModalData } from "./constants";
 import axios from "axios";
 import { toast } from "react-toastify";
+import EmployeesModal from "./EmployeesModal";
 
 const EmployeesTable = () => {
   const token = localStorage.getItem("accToken");
@@ -103,11 +104,13 @@ const EmployeesTable = () => {
         </div>
       </div>
       <Table
+        className="cursor-pointer"
         bordered
         loading={loading}
         dataSource={dataSource}
         columns={[...columns, actionColumn]}
       />
+      <EmployeesModal />
     </>
   );
 };
