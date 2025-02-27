@@ -4,7 +4,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { EditOutlined } from "@ant-design/icons/lib/icons";
 import EmployeesAddModal from "./EmployeesAddModal";
 import { NavLink } from "react-router-dom";
-import { columns, defaultModalData } from "./constants";
+import { defaultModalData } from "./constants";
 import axios from "axios";
 import { toast } from "react-toastify";
 import EmployeesModal from "./EmployeesModal";
@@ -17,6 +17,8 @@ const EmployeesTable = () => {
   const [loading, setLoading] = useState(true);
   const [loadingModal, setLoadingModal] = useState(true);
   const [open, setOpen] = useState(false);
+  const [openEmModal, setOpenEmModal] = useState(false);
+  const [attedanceModalData, setAttedanceModalData] = useState({});
 
   useEffect(() => {
     getList();
@@ -62,26 +64,54 @@ const EmployeesTable = () => {
     }, 1000);
   };
 
-  const actionColumn = {
-    title: "Amallar",
-    dataIndex: "id",
-    align: "center",
-    render: (id, record) =>
-      dataSource.length >= 1 ? (
-        <Fragment>
-          <EditOutlined
-            className="cursor-pointer"
-            onClick={() => handleEdit(record)}
-          />
-          <Popconfirm
-            title="Siz ushbu xodimni o'chirishga aminmisiz?"
-            onConfirm={() => handleDelete(id)}
-          >
-            <DeleteOutlined className="pl-8 text-red-500 cursor-pointer" />
-          </Popconfirm>
-        </Fragment>
-      ) : null,
+  const editAttadence = (record) => {
+    setOpenEmModal(true);
+    setAttedanceModalData(record);
   };
+
+  const columns = [
+    {
+      title: "№",
+      dataIndex: "key",
+      width: "50px",
+      align: "center",
+    },
+    {
+      title: "Ism",
+      dataIndex: "firstName",
+      render: (firstName, record) => (
+        <span onClick={() => editAttadence(record)}>{firstName}</span>
+      ),
+    },
+    {
+      title: "Telefon raqami",
+      dataIndex: "phoneNumber",
+    },
+    {
+      title: "Oylik daromadi",
+      dataIndex: "salary",
+    },
+    {
+      title: "Amallar",
+      dataIndex: "id",
+      align: "center",
+      render: (id, record) =>
+        dataSource.length >= 1 ? (
+          <Fragment>
+            <EditOutlined
+              className="cursor-pointer"
+              onClick={() => handleEdit(record)}
+            />
+            <Popconfirm
+              title="Siz ushbu xodimni o'chirishga aminmisiz?"
+              onConfirm={() => handleDelete(id)}
+            >
+              <DeleteOutlined className="pl-8 text-red-500 cursor-pointer" />
+            </Popconfirm>
+          </Fragment>
+        ) : null,
+    },
+  ];
   return (
     <>
       <div className="flex justify-between">
@@ -104,13 +134,17 @@ const EmployeesTable = () => {
         </div>
       </div>
       <Table
-        className="cursor-pointer"
-        bordered
+        className="cursor-default"
         loading={loading}
         dataSource={dataSource}
-        columns={[...columns, actionColumn]}
+        columns={columns}
       />
-      <EmployeesModal />
+      <EmployeesModal
+        setOpenEmModal={setOpenEmModal}
+        openEmModal={openEmModal}
+        attedanceModalData={attedanceModalData}
+        getList={getList}
+      />
     </>
   );
 };

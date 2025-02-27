@@ -1,3 +1,5 @@
+import { httpRequest } from "./config";
+
 export const postData = (url, data) => {
   const config = {
     method: "POST",

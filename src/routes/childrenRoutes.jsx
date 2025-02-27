@@ -1,5 +1,5 @@
 import LayoutWrapper from "../layout";
-import { Attendance, Hodimlar, Magazin, Ombor, Statistika, TayyorMaxsulotlar } from "../pages";
+import { Attendance, Hodimlar, Magazin, MagazinDetail, Ombor, Statistika, TayyorMaxsulotlar } from "../pages";
 
 export const childrenRoutes = [
   {
@@ -23,6 +23,14 @@ export const childrenRoutes = [
     element: (
       <LayoutWrapper>
         <Magazin />
+      </LayoutWrapper>
+    ),
+  },
+  {
+    path: "shops/:id",
+    element: (
+      <LayoutWrapper>
+        <MagazinDetail />
       </LayoutWrapper>
     ),
   },

@@ -6,8 +6,11 @@ const { Sider } = Layout;
 const Sidebar = ({ collapsed }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const selectedKey =
-    pathname === "/employees/attendance" ? "/employees" : pathname;
+  const selectedKey = pathname.startsWith("/employees")
+    ? "/employees"
+    : pathname.startsWith("/shops")
+    ? "/shops"
+    : pathname;
   return (
     <Sider trigger={null} collapsible collapsed={collapsed}>
       <div className="demo-logo-vertical p-4 flex justify-center">

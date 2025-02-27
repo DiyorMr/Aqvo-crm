@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const httpRequest = (config) => {
   const token = localStorage.getItem("accToken");
   const url = "https://aqvo.limsa.uz/api/";
