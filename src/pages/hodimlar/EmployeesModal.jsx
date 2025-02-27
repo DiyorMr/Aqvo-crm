@@ -39,10 +39,10 @@ const EmployeesModal = ({
       >
         <p>Ism:{attedanceModalData.firstName}</p>
         <p>Familiya:{attedanceModalData.lastName}</p>
-        <p>Telefon:</p>
-        <p>Oylik daromad:</p>
-        <p>Lavozimi:</p>
-        <p>Ish boshlangan vaqti:</p>
+        <p>Telefon:{attedanceModalData.phoneNumber}</p>
+        <p>Oylik daromad:{attedanceModalData.salary}</p>
+        <p>Lavozimi:{attedanceModalData.role}</p>
+        <p>Ish boshlangan vaqti:{attedanceModalData.startedWorkingAt}</p>
         <div className="flex gap-2">
           <p>Kelganmi:</p>
           <Switch value={isCame} onClick={(e) => setIsCame(e)} />
