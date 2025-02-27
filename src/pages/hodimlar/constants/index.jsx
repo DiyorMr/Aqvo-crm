@@ -1,24 +1,3 @@
-export const columns = [
-  {
-    title: "№",
-    dataIndex: "key",
-    width: "50px",
-    align: "center",
-  },
-  {
-    title: "Ism",
-    dataIndex: "firstName",
-  },
-  {
-    title: "Telefon raqami",
-    dataIndex: "phoneNumber",
-  },
-  {
-    title: "Oylik daromadi",
-    dataIndex: "salary",
-  },
-];
-
 export const defaultModalData = {
   firstName: "",
   lastName: "",

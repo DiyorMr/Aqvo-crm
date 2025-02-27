@@ -1,6 +1,8 @@
 import LayoutWrapper from "../layout";
-import { Attendance, Hodimlar, Magazin, Ombor, Statistika, TayyorMaxsulotlar } from "../pages";
+// import { Attendance, Hodimlar, Magazin, Ombor, Statistika, TayyorMaxsulotlar } from "../pages";
 import Tayyor1 from "../pages/tayyormaxsulotlar/Tayyor1";
+import { Attendance, Hodimlar, Magazin, MagazinDetail, Ombor, Statistika, TayyorMaxsulotlar } from "../pages";
+import MaxsulotTarixi from "../pages/tayyormaxsulotlar/MaxsulotTarixi";
 
 export const childrenRoutes = [
   {
@@ -24,6 +26,14 @@ export const childrenRoutes = [
     element: (
       <LayoutWrapper>
         <Magazin />
+      </LayoutWrapper>
+    ),
+  },
+  {
+    path: "shops/:id",
+    element: (
+      <LayoutWrapper>
+        <MagazinDetail />
       </LayoutWrapper>
     ),
   },
@@ -56,6 +66,14 @@ export const childrenRoutes = [
     element: (
       <LayoutWrapper>
         <Tayyor1 />
+      </LayoutWrapper>
+    ),
+  },
+  {
+    path: "maxsulottarixi",
+    element: (
+      <LayoutWrapper>
+        <MaxsulotTarixi />
       </LayoutWrapper>
     ),
   },

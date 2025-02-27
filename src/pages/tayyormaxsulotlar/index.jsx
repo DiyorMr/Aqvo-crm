@@ -118,6 +118,7 @@ const TayyorMaxsulotlar = () => {
       toast.error("O‘chirishda xatolik yuz berdi!");
     }
   };
+  
   const columns = [
     { title: 'No', dataIndex: 'no', key: 'no' },
     { title: 'Nomi', dataIndex: 'nomi', key: 'nomi' },
@@ -129,8 +130,9 @@ const TayyorMaxsulotlar = () => {
         return (
           <div className="flex items-center gap-4 text-green-700">
             <EditOutlined
-              className="cursor-pointer"
-              onClick={() => {
+              className="cursor-pointer ignore-row-click" // stopPropagation ishlashi uchun class qo‘shdik
+              onClick={(e) => {
+                e.stopPropagation(); // Qator bosilganda boshqa sahifaga o'tishining oldini olamiz
                 if (record.id) {
                   showModal(record);
                 } else {
@@ -141,7 +143,8 @@ const TayyorMaxsulotlar = () => {
             <div className="text-red-600">
               <Popconfirm
                 title="Rostdan ham ushbu mahsulotni o'chirmoqchimisiz?"
-                onConfirm={() => {
+                onConfirm={(e) => {
+                  e.stopPropagation(); // Delete bosilganda boshqa sahifaga o'tishining oldini olamiz
                   if (record.id) {
                     handleDelete(record.id);
                   } else {
@@ -149,7 +152,7 @@ const TayyorMaxsulotlar = () => {
                   }
                 }}
               >
-                <DeleteOutlined className="cursor-pointer text-red-600" />
+                <DeleteOutlined className="cursor-pointer text-red-600 ignore-row-click" />
               </Popconfirm>
             </div>
           </div>
@@ -157,6 +160,7 @@ const TayyorMaxsulotlar = () => {
       },
     },
   ];
+
 
   return (
     <div>
@@ -167,9 +171,19 @@ const TayyorMaxsulotlar = () => {
           Tayyor mahsulot qo‘shish
         </Button>
       </div>
-      <Table dataSource={conserveTypes} columns={columns} loading={loading} onRow={(record) => ({
-        onClick: () => navigate(`/tayyor1/${record.id}`, { state: record }),
-      })} />
+      <Table
+        dataSource={conserveTypes}
+        columns={columns}
+        loading={loading}
+        onRow={(record) => ({
+          onClick: (e) => {
+            // Agar foydalanuvchi "Edit" yoki "Delete" tugmachalarini bosmasa, boshqa sahifaga o'tkazamiz
+            if (!e.target.closest(".ignore-row-click")) {
+              navigate(`/tayyor1/${record.id}`, { state: record });
+            }
+          },
+        })}
+      />
 
       <Modal
         title={selectedItem ? "Mahsulotni tahrirlash" : "Yangi mahsulot qo‘shish"}
