@@ -111,7 +111,7 @@ const TayyorMaxsulotlar = () => {
       await axios.delete(`https://aqvo.limsa.uz/api/conserve-type/${id}`, {
         headers: { Authorization: `Bearer ${accToken}` },
       });
-      toast.success("Mahsulot muvaffaqiyatli o‘chirildi!"); // ✅ `toastify` orqali xabar
+      toast.success("Mahsulot muvaffaqiyatli o‘chirildi!"); // `toastify` orqali xabar
       fetchData();
     } catch (error) {
       console.error("O‘chirishda xatolik:", error);
