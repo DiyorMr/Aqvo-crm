@@ -9,6 +9,8 @@ import {
   Statistika,
   TayyorMaxsulotlar,
 } from "../pages";
+import MaxsulotTarixi from "../pages/tayyormaxsulotlar/MaxsulotTarixi";
+import Tayyor1 from "../pages/tayyormaxsulotlar/Tayyor1";
 
 export const childrenRoutes = [
   {
@@ -72,6 +74,22 @@ export const childrenRoutes = [
     element: (
       <LayoutWrapper>
         <TayyorMaxsulotlar />
+      </LayoutWrapper>
+    ),
+  },
+  {
+    path: "tayyor1/:id",
+    element: (
+      <LayoutWrapper>
+        <Tayyor1 />
+      </LayoutWrapper>
+    ),
+  },
+  {
+    path: "maxsulottarixi",
+    element: (
+      <LayoutWrapper>
+        <MaxsulotTarixi />
       </LayoutWrapper>
     ),
   },
