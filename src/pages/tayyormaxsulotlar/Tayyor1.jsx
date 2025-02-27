@@ -8,6 +8,7 @@ const { Option } = Select;
 function Tayyor1() {
     const location = useLocation();
     const navigate = useNavigate();
+    const [inputList, setInputList] = useState([{ id: 1 }])
     const tayyor1 = location.state;
 
     if (!tayyor1) {
@@ -40,6 +41,28 @@ function Tayyor1() {
         },
         ...products,
     ];
+
+    const handleAddInputs = () => {
+        setInputList([...inputList, { id: inputList.length + 1 }]);
+    };
+
+    const handleDeleteInputs = () => {
+        setInputList([{ id: 1 }]);
+        form.resetFields();
+    };
+
+    const handleAddProduct = (values) => {
+        const newProducts = inputList.map((input, index) => ({
+            key: products.length + index + 2,
+            no: products.length + index + 1,
+            nomi: values[`productType_${input.id}`],
+            miqdori: values[`amount_${input.id}`],
+            kelgan_vaqti: new Date().toISOString().split("T")[0],
+        }));
+        setProducts([...products, ...newProducts]);
+        setInputList([{ id: 1 }]); // Faqat bitta inputni qoldiramiz
+        form.resetFields();
+    };
 
     const openConfirmModal = (values) => {
         setFormData(values);
@@ -85,7 +108,63 @@ function Tayyor1() {
                 <p>Bu mahsulotni tayyorlashda foydalanilgan mahsulotlar mavjud. Davom ettirishdan oldin o‘chirishingiz zarur va boshidan qo‘shasiz?</p>
             </Modal>
 
-            {/* 2-Modal: Mahsulot qo‘shish */}
+            {/* 2-Modal: Mahsulotni tahrirlash */}
+            <Modal
+                title="Mahsulotni tahrirlash"
+                open={isEditModalOpen}
+                onCancel={() => setIsEditModalOpen(false)}
+                footer={null}
+            >
+                <Form form={form} layout="vertical" onFinish={handleAddProduct}>
+                    {inputList.map((input) => (
+                        <div key={input.id} className="flex gap-3 mb-3">
+                            <Form.Item
+                                name={`productType_${input.id}`}
+                                rules={[{ required: true, message: "Iltimos, mahsulot turini tanlang!" }]}
+                                style={{ flex: 1 }}
+                            >
+                                <Select placeholder="Mahsulot turini tanlang">
+                                    {
+                                        products?.map((item) => (
+                                            <div className="border border-black">
+                                                <option value="" key={item.id}></option>
+                                            </div>
+                                        ))
+                                    }
+                                </Select>
+                            </Form.Item>
+
+                            <Form.Item
+                                name={`amount_${input.id}`}
+                                rules={[{ required: true, message: "Iltimos, miqdorni kiriting!" }]}
+                                style={{ flex: 1 }}
+                            >
+                                <Input type="number" placeholder="Masalan, 200" />
+                            </Form.Item>
+                            <div className="flex items-center justify-center border border-red-500 w-11 h-8 rounded-[8px]">
+                                {inputList.length > 1 && (
+                                    <div className="text-red-700">
+                                        <Button type="danger" onClick={handleDeleteInputs} icon={<DeleteOutlined />} />
+                                    </div>
+                                )}
+                            </div>
+
+                        </div>
+                    ))}
+
+                    <div className="mb-5">
+                        <Button type="dashed" onClick={handleAddInputs} block>
+                            + Qo‘shish
+                        </Button>
+                    </div>
+
+                    <Button type="primary" htmlType="submit" block className="mt-3">
+                        Saqlash
+                    </Button>
+                </Form>
+            </Modal>
+
+            {/* 3-Modal: Mahsulot qo‘shish */}
             <Modal
                 title="Mahsulot qo'shish"
                 open={isAddProductModalOpen}
@@ -107,7 +186,7 @@ function Tayyor1() {
                 </Form>
             </Modal>
 
-            {/* 3-Modal: Tasdiqlash modal */}
+            {/* 4-Modal: Tasdiqlash modal */}
             <Modal
                 title="Tasdiqlash"
                 open={isConfirmSaveModalOpen}
@@ -120,7 +199,7 @@ function Tayyor1() {
                 <p>Formadagi ma'lumotlarni saqlashga ishonchingiz komilmi?</p>
                 {formData && (
                     <>
-                        <p><strong>Miqdori:</strong> {formData.amount}</p>
+                        <p><strong>Miqdori:</strong> {formData.name}</p>
                         <p><strong>Sana:</strong> {formData.date?.format("YYYY-MM-DD")}</p>
                     </>
                 )}
@@ -130,4 +209,3 @@ function Tayyor1() {
 }
 
 export default Tayyor1;
-
