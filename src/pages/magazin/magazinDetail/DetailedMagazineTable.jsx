@@ -3,8 +3,10 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Table } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import { Columns } from "./constants";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate , NavLink } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { DatePicker } from "antd";
+import { ColumnsDetailed } from "./constants";
 
 const MagazineTable = () => {
   const [stores, setStores] = useState(null);
@@ -15,7 +17,17 @@ const MagazineTable = () => {
   const [phone, setPhone] = useState(null);
   const [searchValue, setSearchValue] = useState("");
   const [selected, setSelected] = useState(null);
-  const navigate = useNavigate()
+  const [store, setStore] = useState(null);
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const { RangePicker } = DatePicker;
+
+  function onChange(date, dateString) {
+    console.log(date, dateString);
+  }
+
+  const storeData = store?.filter((item) => item.id === id);
+  console.log(storeData);
 
   const openModal = () => {
     setChangeModal(true);
@@ -28,14 +40,6 @@ const MagazineTable = () => {
     setName("");
     setAddress("");
     setPhone("");
-  };
-
-  const EditData = (store) => {
-    setSelected(store?.id);
-    setName(store?.name);
-    setAddress(store?.address);
-    setPhone(store?.phone);
-    openModal();
   };
 
   const Submit = async (e) => {
@@ -76,89 +80,78 @@ const MagazineTable = () => {
           : toast.success("Do‘kon muvaffaqiyatli qo‘shildi!");
       }
       closeModal(); // Modalni yopamiz
-      getMagazine(); // Yangilangan ma'lumotlarni olib kelamiz
+      getHistoryItem(); // Yangilangan ma'lumotlarni olib kelamiz
     } catch (error) {
       toast.error("Xatolik yuz berdi: " + error.message);
     }
   };
 
-  const getMagazine = async () => {
+  const getHistoryItem = async () => {
     const token = localStorage.getItem("accToken");
     try {
-      const res = await axios.get("https://aqvo.limsa.uz/api/stores", {
+      const res = await axios.get(
+        "https://aqvo.limsa.uz/api/store-item-history",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const res1 = await axios.get("https://aqvo.limsa.uz/api/stores", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setStores(res?.data?.data);
-      setFilterData(res?.data?.data);
+
+      setStore(res1?.data?.data);
+
+      setStores(res?.data?.data?.items);
+      setFilterData(res?.data?.data?.items);
     } catch (error) {
       toast.error(error);
     }
   };
 
-  const handleSearch = (value) => {
-    setSearchValue(value);
-    if (value === "") {
-      setFilterData(stores);
-    } else {
-      const filtered = stores.filter((item) =>
-        item.name.toLowerCase().includes(value.toLowerCase())
-      );
-      setFilterData(filtered);
-    }
-  };
-
-  console.log(filterData);
-
-  const handleDelete = async (id) => {
-    const token = localStorage.getItem("accToken");
-    await axios.delete(`https://aqvo.limsa.uz/api/stores/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    getMagazine();
-  };
-
   useEffect(() => {
-    getMagazine();
+    getHistoryItem();
   }, []);
 
   return (
     <>
       <div className="overflow-x-scroll lg:overflow-auto">
-        <div className="flex items-center gap-[30px] justify-between mb-[20px]">
-          <h1>Do'kanlar: {filterData?.length}</h1>
-          <div className="flex items-center gap-[20px]">
-            <div className="w-[200px]  flex items-center">
-              <input
-                className="w-[80%] border border-gray-400 border-r-0 outline-none  p-[5px] rounded-l-[4px]"
-                placeholder="Do'konlar"
-                type="text"
-                onChange={(e) => handleSearch(e?.target?.value)}
-              />
-              <button className="w-[20%] cursor-pointer p-[5px] rounded-r-[4px] border border-blue-500 bg-blue-500">
-                <SearchOutlined style={{ color: "white" }} />
-              </button>
-            </div>
-            <button
-              onClick={() => openModal()}
-              className="bg-blue-500   min-w-[150px] text-white p-[6px] rounded-[8px] cursor-pointer"
-            >
-              "Do'kon qo'shish"
-            </button>
+        <div className="flex justify-between mb-[20px]">
+          <NavLink to={"/shops"}>Qaytish</NavLink>
+          <RangePicker onChange={onChange} />
+        </div>
+        <div className="flex items-center justify-between mb-[100px]">
+          <div className="flex flex-col gap-[6px]">
+            <h1 className="text-[16px]">
+              Tashkilot nomi: <span className="font-normal">{storeData?.[0]?.name}</span>
+            </h1>
+            <h1 className="text-[16px]">
+              Tashkilot manzili: <span className="font-normal">{storeData?.[0]?.address}</span>
+            </h1>
+            <h1 className="text-[16px]">
+              Tashkilot telefoni: <span className="font-normal">{storeData?.[0]?.phone}</span>
+            </h1>
+          </div>
+          <div className="flex flex-col gap-[6px] mr-[190px]">
+            <h1 className="text-[16px] text-gray-500">Jami: 0</h1>
+            <h1 className="text-[16px] text-gray-500">To'langan: 0</h1>
+            <h1 className="text-[16px] text-gray-500">Qarzdorligi: 0</h1>
           </div>
         </div>
-        <hr />
-        <br />
+        <div className="flex mb-[20px] gap-[30px] items-center justify-between">
+          <h1 className="text-[24px]">Yetkazilgan mahsulotlar</h1>
+          <div className="flex gap-[10px]">
+            <NavLink className="w-[200px] px-[5px] py-[10px]   flex items-center justify-center" style={{color:"white" , background:"#1677FF" , borderRadius:"8px"}}>Mahsulot tarixini ko'rish</NavLink>
+            <button className="w-[200px] px-[5px] py-[10px]  text-white flex items-center justify-center" style={{color:"white" , background:"#1677FF" , borderRadius:"8px"}}>Mahsulot qo'shish</button>
+          </div>
+        </div>
         <Table
-          columns={Columns({ handleDelete, EditData })}
-          dataSource={filterData}
-          rowKey="id"
-          onRow={(record) => ({
-            onClick: () => navigate(`/shops/${record.id}`), // Dynamic pagega o'tish
-          })}
+          dataSource={stores || []}
+          columns={ColumnsDetailed}
         />
       </div>
       {changeModal ? (

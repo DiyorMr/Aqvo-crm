@@ -1,8 +1,9 @@
 import React from 'react'
+import DetailedMagazineTable from './DetailedMagazineTable';
 
 const MagazinDetail = () => {
   return (
-    <div>MagazinDetail</div>
+    <div><DetailedMagazineTable/></div>
   )
 }
 
